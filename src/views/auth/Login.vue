@@ -5,6 +5,7 @@ import { ref } from 'vue'
 
 const authStore = useAuthStore()
 const { loading, error } = storeToRefs(authStore)
+const {login} = authStore
 
 // TODO: Initialize auth store and get necessary refs
 // Hint: Use useAuthStore() and storeToRefs()
@@ -12,14 +13,20 @@ const { loading, error } = storeToRefs(authStore)
 // TODO: Create form ref with login fields
 // Hint: You'll need email and password
 const form = ref({
-    // Your form fields here
+   email : null,
+   password : null,
 })
 
 // TODO: Implement handleSubmit function
 // Hint: This should call the login function from auth store
 // and handle any errors
 const handleSubmit = async () => {
-    // Your code here
+    await login(from.value)
+
+    if(error.value === 'Unauthorized'){
+        form.value.password = null
+        alert('Email atau Password salah')
+    }
 }
 
 // TODO: Implement togglePassword function

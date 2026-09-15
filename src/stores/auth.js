@@ -30,7 +30,12 @@ export const useAuthStore = defineStore("auth", {
                 Cookies.set('token', token)
 
                 this.success = response.data.message
-                router.push({ name: 'admin.dashboard' })
+
+                if (response.data.data.user.role === 'admin') {
+                    router.push({ name: 'admin.dashboard' })
+                } else {
+                    router.push({ name: App.dashboard })
+                }
             } catch (error) {
                 this.error = handleError(error)
             } finally {
