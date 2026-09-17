@@ -9,8 +9,8 @@ import { capitalize } from 'lodash';
 import { DateTime } from 'luxon';
 
 const dashboardStore = useDashboardStore()
-const {statistic} = storeToRefs(dashboardStore)
-const {fetchStatistics} = dashboardStore
+const { statistic } = storeToRefs(dashboardStore)
+const { fetchStatistics } = dashboardStore
 
 const ticketStore = useTicketStore()
 const {tickets} = storeToRefs(ticketStore)
