@@ -23,10 +23,13 @@ export const useAuthStore = defineStore("auth", {
     actions: {
         async login(credentials) {
             this.loading = true
+            this.error = null
 
             try {
                 const response = await axiosInstance.post('/login', credentials)
+
                 const token = response.data.data.token
+
                 Cookies.set('token', token)
 
                 this.success = response.data.message
@@ -34,7 +37,7 @@ export const useAuthStore = defineStore("auth", {
                 if (response.data.data.user.role === 'admin') {
                     router.push({ name: 'admin.dashboard' })
                 } else {
-                    router.push({ name: App.dashboard })
+                    router.push({ name: 'app.dashboard' })
                 }
             } catch (error) {
                 this.error = handleError(error)
