@@ -33,6 +33,9 @@ const fetchTicketDetail = async () => {
 const handleSubmit = async () => {
     await createTicketReply(route.params.code, form.value)
 
+    error.value =null
+    form.value.content = null
+
     await fetchTicketDetail()
 }
 

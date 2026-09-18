@@ -1,41 +1,50 @@
 <script setup>
-// TODO: Import necessary dependencies
-// Hint: You'll need to import from vue, pinia, lodash, feather-icons, luxon, and vue-router
+import { onMounted, ref } from 'vue';
+import { useTicketStore } from '@/stores/ticket';
+import { storeToRefs } from 'pinia';
+import { capitalize } from 'lodash';
+import feather from 'feather-icons';
+import { DateTime } from 'luxon';
+import { useRoute } from 'vue-router';
 
-// TODO: Initialize ticket store and get necessary refs
-// Hint: Use useTicketStore() and storeToRefs()
 
-// TODO: Create route instance
-// Hint: Use useRoute()
+const ticketStore = useTicketStore()
+const { success, error, loading } = storeToRefs(ticketStore)
+const {fetchTicket, createTicketReply} = ticketStore
 
-// TODO: Create refs for ticket and form
-// Hint: You'll need ticket object and form with content field
+const route = useRoute()
+
+
 const ticket = ref({})
 const form = ref({
     content: '',
 })
 
-// TODO: Get store methods and refs
-// Hint: Destructure success, error, loading from storeToRefs
-// Hint: Destructure fetchTicket and createTicketReply methods
-
-// TODO: Implement fetchTicketDetail function
-// Hint: This should call fetchTicket with route code param
 const fetchTicketDetail = async () => {
-    // Your code here
+    const response = await fetchTicket(route.params.code)
+
+    ticket.value = response
+    form.value.status = response.status
 }
 
 // TODO: Implement handleSubmit function
 // Hint: This should call createTicketReply with code and form
 // Then refetch ticket details
 const handleSubmit = async () => {
-    // Your code here
+    await createTicketReply(route.params.code, form.value)
+
+    error.value =null
+    form.value.content = null
+
+    await fetchTicketDetail()
 }
 
 // TODO: Implement onMounted hook
 // Hint: Fetch initial ticket details and initialize feather icons
 onMounted(async () => {
-    // Your code here
+    await fetchTicketDetail()
+
+    feather.replace()
 })
 </script>
 
@@ -122,7 +131,12 @@ onMounted(async () => {
                     </div>
                     <button class="px-6 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700">
                         <i data-feather="send" class="w-4 h-4 inline-block mr-2"></i>
-                        Kirim Balasan
+                        <span v-if="!loading">
+                            Kirim Balasan
+                        </span>
+                        <span v-else>
+                            Loading...
+                        </span>
                     </button>
                 </div>
             </form>
